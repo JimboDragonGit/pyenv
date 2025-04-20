@@ -51,8 +51,13 @@ class PyEnv
       end
 
       def pyenv_prerequisites
+        default_debian = %w(make libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev git)
+        default_debian << value_for_platform(
+            'ubuntu' => { '>= 24.04' => 'libllvm19', 'default' => 'llvm' },
+            'default' => 'llvm'
+          )
         value_for_platform_family(
-        'debian' =>  %w(make libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev git) \
+        'debian' =>  default_debian \
           << value_for_platform(
             'debian' => { '>= 11' => 'python3-openssl', 'default' => 'python-openssl' },
             'ubuntu' => { '>= 22.04' => 'python3-openssl', 'default' => 'python-openssl' },
